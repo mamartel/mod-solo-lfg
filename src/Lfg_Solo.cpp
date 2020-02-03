@@ -13,40 +13,21 @@
 #include "Chat.h"
 #include "Opcodes.h"
 
-class lfg_solo_announce : public PlayerScript
-{
-
-public:
-
-    lfg_solo_announce() : PlayerScript("lfg_solo_announce") {}
-
-    void OnLogin(Player* player)
-    {
-        // Announce Module
-        if (sConfigMgr->GetBoolDefault("SoloLFG.Announce", true))
-        {
-                ChatHandler(player->GetSession()).SendSysMessage("This server is running the |cff4CFF00Solo Dungeon Finder |rmodule.");
-         }
-    }
-};
-
 class lfg_solo : public PlayerScript
 {
 public:
     lfg_solo() : PlayerScript("lfg_solo") { }
-    
-   // Docker Installation prevents warnings. In order to avoid the issue, we need to add __attribute__ ((unused)) 
-   // to the player variable to tell the compiler it is fine not to use it.
-   void OnLogin(Player* player)
-   {
-	   if (sConfigMgr->GetIntDefault("LFG.SoloMode", true))
+
+    void OnLogin(Player* /*player*/)
+    {
+        if (sConfigMgr->GetIntDefault("LFG.SoloMode", true))
         {
             if (!sLFGMgr->IsSoloLFG())
             {
-            sLFGMgr->ToggleSoloLFG();
+                sLFGMgr->ToggleSoloLFG();
             }
         }
-   }
+    }
 };
 
 class lfg_solo_config : public WorldScript
@@ -69,7 +50,6 @@ public:
 
 void AddLfgSoloScripts()
 {
-	new lfg_solo_announce();
     new lfg_solo();
-	new lfg_solo_config();
+    new lfg_solo_config();
 }
